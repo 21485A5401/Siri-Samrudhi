@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 // app.use('/public', express.static(path.join(__dirname, 'public')));
-const whitelist = [ 'undefined', 'null', process.env.ORIGIN, process.env.STAGING_ORIGIN]
+const whitelist = [ 'http://backend.sirisamruddhigold.in','https://backend.sirisamruddhigold.in/','http://165.232.183.157:4050','http://165.232.183.157:4050/','http://localhost:4050/','undefined', 'null', process.env.ORIGIN, process.env.STAGING_ORIGIN]
 
 app.use(cors({
     origin: (origin, callback) => {
