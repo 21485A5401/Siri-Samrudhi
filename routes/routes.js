@@ -12,6 +12,6 @@ router.post('/testmessages', chatbot.receiveEventsTest);
 
 
 router.get('/get', admin.getapi);
-router.get('/getData', admin.getapi);
+router.get('/getdata', admin.getapi);
 
 module.exports = router;
