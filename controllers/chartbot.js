@@ -87,8 +87,10 @@ const prepareButtons = (recipient, header, message, footer, buttons) => {
 		"interactive": {
 			"type": "button",
 			"header": header ? {
-				"type": "text",
-				"text": header
+				"type": "document",  // Set type to "document"
+				"document": {
+					"link": header  // The URL of the document you want to send
+				}
 			} : undefined,
 			"body": {
 				"text": message
@@ -502,6 +504,34 @@ const prepareimageLocation = (recipient, header, text, lat, lang) => {
 	return JSON.stringify(data);
 }
 
+const preparechatagent = (recipient, text) => {
+
+	const data = {
+		"messaging_product": "whatsapp",
+		"recipient_type": "individual",
+		"to": recipient,
+		"type": "interactive",
+		"interactive": {
+			"type": "cta_url",
+			"body": {
+				"text": text
+			},
+			"footer": {
+				"text": "Tap below for more details"
+			},
+			"action": {
+				"name": "cta_url",
+				"parameters": {
+					"display_text": "chat with my agent",
+					"url": `https://wa.me/${process.env.AGENT_NUMBER}?text=I%20need%20more%20details`
+				}
+			}
+		}
+
+	}
+	return JSON.stringify(data);
+}
+
 
 
 // Parse the button or list clicks from user
@@ -536,29 +566,20 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "button",
 			message: {
-				header: undefined,
+				header: `${process.env.SERVER_URL}public/schemes.pdf`,
 				text: `*Our Schemes:*\n\n1.Golden Dreams.\n2.Golden Future.\n3.Golden Nidhi.`,
-				footer: "Please select an  option,For More Details",
+				footer: "Please select an option, For More Details",
 				buttons: [
-					{ id: 110, text: "Golden Dreams" },
-					{ id: 111, text: "Golden Future" },
-					{ id: 112, text: "Golden Nidhi" }
+					{ id: 109, text: "Main Menu" }
 				]
 			}
 		}
 	}
 	if (option.id === "105") {
 		return {
-			type: "button",
+			type: "agent",
 			message: {
-				header: undefined,
-				text: `*Our Schemes:*\n\n1.Golden Dreams.\n2.Golden Future.\n3.Golden Nidhi.`,
-				footer: "Please select an  option,For More Details",
-				buttons: [
-					{ id: 110, text: "Golden Dreams" },
-					{ id: 111, text: "Golden Future" },
-					{ id: 112, text: "Golden Nidhi" }
-				]
+				text: 'Welcome to Siri Samrudhi Agent Support. \n\nClick below to Contact Agent!',
 			}
 		}
 	}
@@ -575,7 +596,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 			type: "list",
 			message: {
 				// header: `public/store_image.jpeg`,
-				text: `🛍️ About Siri Samruddhi Gold Palace:\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\nYelahanka Branch:\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101 \nPh - 08152-460609 Mob.: 90350 85739\n\nKolar Branch:\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand\n main road 16th B Main Road, Bengaluru, Karnataka 560065.`,
+				text: `🛍️ *About Siri Samruddhi Gold Palace:*\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\n*Yelahanka Branch:*\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101.\n\n*Kolar Branch:*\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand main road 16th B Main Road, Bengaluru, Karnataka 560065.`,
 				footer: "please choose below options..",
 				buttontext: 'Show options',
 				options: listdata.map((dep, index) => {
@@ -1182,6 +1203,8 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
 				} else if (reply.type === 'button') {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
+				}else if (reply.type === 'agent') {
+					prepareschema = preparechatagent(phonenumber, reply.message.text);
 				}
 
 				else {
