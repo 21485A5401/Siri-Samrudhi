@@ -44,12 +44,12 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 		"type": "interactive",
 		"interactive": {
 			"type": "list",
-			"header": {
-				"type": "image",
-				"image": {
-					"link": `${process.env.SERVER_URL}${header}`
-				}
-			},
+			// "header": {
+			// 	"type": "image",
+			// 	"image": {
+			// 		"link": `${process.env.SERVER_URL}${header}`
+			// 	}
+			// },
 			"body": {
 				"text": message
 			},
