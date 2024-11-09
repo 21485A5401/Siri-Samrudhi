@@ -468,6 +468,8 @@ const handleText = async (message, phonenumber, username) => {
 }
 
 const prepareimageLocation = (recipient, header, text, lat, lang) => {
+	console.log(recipient, header, text, lat, lang);
+
 	const data = {
 		"messaging_product": "whatsapp",
 		"recipient_type": "individual",
@@ -478,7 +480,7 @@ const prepareimageLocation = (recipient, header, text, lat, lang) => {
 			"header": {
 				"type": "image",
 				"image": {
-					"link": header
+					"link": `${process.env.SERVER_URL}${header}`,
 				}
 			},
 			"body": {
@@ -549,7 +551,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "imageLocation",
 			message: {
-				header: `${process.env.SERVER_URL}public/store_image.jpeg`,
+				header: `public/store_image.jpeg`,
 				text: 'Welcome to Yelahanka Branch \n\nCheck out this location!',
 				latitude: '13.093621273486704',
 				longitude: '77.58230287116436'
@@ -560,7 +562,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "imageLocation",
 			message: {
-				header: `${process.env.SERVER_URL}public/store_image2.jpeg`,
+				header: `public/store_image2.jpeg`,
 				text: 'Welcome to kolar Branch \n\nCheck out this location!',
 				latitude: '13.136892893055961',
 				longitude: '78.13037966473152'
