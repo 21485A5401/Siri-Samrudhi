@@ -47,8 +47,7 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 			"header": {
 				"type": "image",
 				"image": {
-					"link": `${process.env.SERVER_URL}${header}`,
-					"caption":"branch images"
+					"link": `${process.env.SERVER_URL}${header}`
 				}
 			},
 			"body": {
