@@ -47,7 +47,8 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 			"header": {
 				"type": "image",
 				"image": {
-					"link": `${process.env.SERVER_URL}${header}`
+					"link": `${process.env.SERVER_URL}${header}`,
+					"caption":"branch images"
 				}
 			},
 			"body": {
@@ -450,7 +451,7 @@ const handleText = async (message, phonenumber, username) => {
 	return {
 		type: "list",
 		message: {
-			header: `public/store_image.jpg`,
+			header: `public/store_image.jpeg`,
 			text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
 			footer: "please choose below options..",
 			buttontext: 'Show options',
@@ -551,7 +552,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "imageLocation",
 			message: {
-				header: `${process.env.SERVER_URL}public/store_image.jpg`,
+				header: `${process.env.SERVER_URL}public/store_image.jpeg`,
 				text: 'Welcome to Yelahanka Branch \n\nCheck out this location!',
 				latitude: '13.093621273486704',
 				longitude: '77.58230287116436'
@@ -562,7 +563,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "imageLocation",
 			message: {
-				header: `${process.env.SERVER_URL}public/store_image2.jpg`,
+				header: `${process.env.SERVER_URL}public/store_image2.jpeg`,
 				text: 'Welcome to kolar Branch \n\nCheck out this location!',
 				latitude: '13.136892893055961',
 				longitude: '78.13037966473152'
@@ -589,7 +590,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "list",
 			message: {
-				header: `public/store_image.jpg`,
+				header: `public/store_image.jpeg`,
 				text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
 				footer: "please choose below options..",
 				buttontext: 'Show options',
