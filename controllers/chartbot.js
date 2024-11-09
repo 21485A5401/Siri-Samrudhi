@@ -537,13 +537,54 @@ const handleInteractive = async (option, phonenumber, username) => {
 			type: "button",
 			message: {
 				header: undefined,
-				text: `Our showroom awaits you with the best prices on gold!\n\nVisit us to explore our latest collections and find the perfect piece.`,
-				footer: "Please select an  option",
+				text: `*Our Schemes:*\n\n1.Golden Dreams.\n2.Golden Future.\n3.Golden Nidhi.`,
+				footer: "Please select an  option,For More Details",
 				buttons: [
-					{ id: 107, text: "Yelahanka Location" },
-					{ id: 108, text: "Kolar Location " },
-					{ id: 109, text: "Main Menu" }
+					{ id: 110, text: "Golden Dreams" },
+					{ id: 111, text: "Golden Future" },
+					{ id: 112, text: "Golden Nidhi" }
 				]
+			}
+		}
+	}
+	if (option.id === "105") {
+		return {
+			type: "button",
+			message: {
+				header: undefined,
+				text: `*Our Schemes:*\n\n1.Golden Dreams.\n2.Golden Future.\n3.Golden Nidhi.`,
+				footer: "Please select an  option,For More Details",
+				buttons: [
+					{ id: 110, text: "Golden Dreams" },
+					{ id: 111, text: "Golden Future" },
+					{ id: 112, text: "Golden Nidhi" }
+				]
+			}
+		}
+	}
+	if (option.id === "106") {
+		const listdata = [
+			// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+			{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+		]
+		return {
+			type: "list",
+			message: {
+				// header: `public/store_image.jpeg`,
+				text: `🛍️ About Siri Samruddhi Gold Palace:\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\nYelahanka Branch:\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101 \nPh - 08152-460609 Mob.: 90350 85739\n\nKolar Branch:\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand\n main road 16th B Main Road, Bengaluru, Karnataka 560065.`,
+				footer: "please choose below options..",
+				buttontext: 'Show options',
+				options: listdata.map((dep, index) => {
+					return {
+						id: `${dep._id}`,
+						title: dep.title,
+						text: dep.text
+					}
+				})
 			}
 		}
 	}
