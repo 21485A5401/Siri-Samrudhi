@@ -36,7 +36,7 @@ const preparePlainText = (recipient, text) => {
 
 
 const prepareList = (recipient, header, message, footer, options, buttontext) => {
-	console.log(options)
+	console.log(recipient, header, message, footer, options, buttontext)
 	const data = {
 		"messaging_product": "whatsapp",
 		"recipient_type": "individual",
