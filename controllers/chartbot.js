@@ -445,13 +445,7 @@ const handleText = async (message, phonenumber, username) => {
 		{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 	]
 	// if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
-	const user = await User.findOne({ MobileNumber: phonenumber });
-	if (!user) {
-		await User.create({
-			UserName: username,
-			MobileNumber: phonenumber
-		});
-	}
+
 	return {
 		type: "list",
 		message: {
@@ -1122,8 +1116,17 @@ const receiveEvents = async (req, res) => {
 			let reply
 			let prepareschema
 			let prepareschema_dep
-			// let existingAuthor = await Author.findOne({ phone: parser.nationalNumber });
+
+			let user = await User.findOne({ MobileNumber: parser.nationalNumber });
+
+			if (!user) {
+				await User.create({
+					UserName: username,
+					MobileNumber: phonenumber
+				});
+			}
 			let UserData = await User.findOne({ MobileNumber: parser.nationalNumber });
+			// let existingAuthor = await Author.findOne({ phone: parser.nationalNumber });
 			if (UserData) {
 
 				if (messagebody.type === "text") {
