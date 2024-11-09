@@ -89,7 +89,8 @@ const prepareButtons = (recipient, header, message, footer, buttons) => {
 			"header": header ? {
 				"type": "document",  // Set type to "document"
 				"document": {
-					"link": header  // The URL of the document you want to send
+					"link": header,  // The URL of the document you want to send
+					"filename": "Schemes.pdf"
 				}
 			} : undefined,
 			"body": {
