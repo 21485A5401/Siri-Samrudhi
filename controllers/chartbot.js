@@ -6,6 +6,7 @@ const dotenv = require('dotenv')
 const fs = require('fs').promises;
 const path = require('path');
 const mime = require("mime-types")
+const User = require("../models/User")
 dotenv.config()
 
 
@@ -44,8 +45,10 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 		"interactive": {
 			"type": "list",
 			"header": header ? {
-				"type": "text",
-				"text": header
+				"type": "image",
+				"image": {
+					"link": header
+				}
 			} : undefined,
 			"body": {
 				"text": message
@@ -55,18 +58,17 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 			} : undefined,
 			"action": {
 				"button": buttontext ? buttontext : "Show options",
-				"sections": options.map(option => {
-					return {
-						"title": option.title,
-						"rows": [
-							{
-								"id": option.id,
-								"title": option.text,
-								// "description": option.title,
-							}
-						]
-					}
-				})
+				"sections":
+				{
+					"title": "Main Menu Options",
+					"rows": options.map(option => {
+						return {
+							"id": option.id,
+							"title": option.title,
+							"description": option.text,
+						};
+					})
+				}
 			}
 		}
 	}
@@ -434,68 +436,78 @@ const handleTextNoEmployee = async (message, phonenumber, username) => {
 }
 const handleText = async (message, phonenumber, username) => {
 	console.log(message.toLowerCase())
-	const list = [{_id:'101',title:'our scmems'}]
-	if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
-		return {
-			type: "list",
-			message: {
-				header: undefined,
-				text: `Hi ${username},\n\nwelcome to siri samruddhi gold palace.`,
-				footer: "Yplease choose below options..",
-				options: department_data.map((dep, index) => {
-					let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-					let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-					return {
-						id: `${dep._id.toString()}`,
-						title: depname,
-						text:depDesc
+	const listdata = [
+		// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+		{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+		{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+		{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+		{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+		{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+	]
+	// if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
+	const user = await User.findOne({ MobileNumber: phonenumber });
+	if (!user) {
+		await User.create({
+			UserName: username,
+			MobileNumber: phonenumber
+		});
+	}
+	return {
+		type: "list",
+		message: {
+			header: `${process.env.SERVER_URL}public/store_image.jpg`,
+			text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+			footer: "please choose below options..",
+			buttontext: 'Show options',
+			options: listdata.map((dep, index) => {
+				return {
+					id: `${dep._id}`,
+					title: dep.title,
+					text: dep.text
+				}
+			})
+		}
+	}
+	// }
+
+}
+
+const prepareimageLocation = (recipient, header, text, lat, lang) => {
+	const data = {
+		"messaging_product": "whatsapp",
+		"recipient_type": "individual",
+		"to": recipient,
+		"type": "interactive",
+		"interactive": {
+			"type": "button",
+			"header": {
+				"type": "image",
+				"image": {
+					"link": header
+				}
+			},
+			"body": {
+				"text": text
+			},
+			"footer": {
+				"text": "Tap below for more details"
+			},
+			"action": {
+				"buttons": [
+					{
+						"type": "url",
+						"title": "View Location on Map",
+						"url": `https://www.google.com/maps?q=${lat},${lang}`
 					}
-				})
+				]
 			}
 		}
-	}
 
+	}
+	return JSON.stringify(data);
 }
 
-const handleTextUser = async (message, phonenumber, username) => {
-	const today = new Date()
 
-	today.setHours(0, 0, 0, 0)
-
-	if (message.toLowerCase() === "version") {
-		let content
-
-		try {
-			content = await fs.readFile("./.release-version", { encoding: "utf-8" })
-		} catch (error) {
-			console.log("[-] Failed to read .release-version")
-
-			return { type: "text", message: "Failed to read .release-version" }
-		}
-
-		const version = content.replace("RELEASE_VERSION=", "version ")
-
-		return { type: "text", message: "*" + version.trim() + "*" }
-	}
-
-	if (message === "crash") {
-		throw new Error
-	}
-	console.log(message.toLowerCase())
-	return {
-		type: "button",
-		message: {
-			header: undefined,
-			text: `Hello, Welcome to Nizamabad Municipal Corporation Chatbot`,
-			footer: "You may choose to..",
-			buttons: [
-				{ id: 101, text: "Report an Issue " },
-				{ id: 102, text: "Track an Issue " }
-			]
-		}
-	}
-
-}
 
 // Parse the button or list clicks from user
 const handleInteractive = async (option, phonenumber, username) => {
@@ -510,165 +522,94 @@ const handleInteractive = async (option, phonenumber, username) => {
 	const dateOnly = currentDate.toISOString().split('T')[0];
 
 
-	if (option.id === "101") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-			let department_data = await Department.find({ status: true });
-			return {
-				type: "list",
-				message: {
-					// header: "Select Department",
-					text: "Choose the concerned Department",
-					// footer: "Select an option",
-					options: department_data.map((dep, index) => {
-						let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-						let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-						return {
-							id: `${dep._id.toString()}`,
-							title: depname,
-							text: depDesc
-						}
-					})
-				}
-			}
-		} else {
-			return { type: "text", message: "Please send the current 📍 location for Check-in" }
-		}
-	}
 	if (option.id === "102") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			return {
-				type: "issue_status",
-				message: "Please enter your description as message..."
+		return {
+			type: "button",
+			message: {
+				header: undefined,
+				text: `Our showroom awaits you with the best prices on gold!\n\nVisit us to explore our latest collections and find the perfect piece.`,
+				footer: "Please select an  option",
+				buttons: [
+					{ id: 107, text: "Yelahanka Location" },
+					{ id: 108, text: "Kolar Location " },
+					{ id: 109, text: "Main Menu" }
+				]
 			}
-		} else {
-			return { type: "text", message: "Please send the current 📍 location for Check-in" }
 		}
 	}
 	if (option.id === "103") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			if (is_employee_login.checkOutTime) {
-				return { type: "text", message: "You are already checkout for this day." }
-			} else {
-				return { type: "text", message: "Please send the current 📍 location for checkout" }
+		return {
+			type: "button",
+			message: {
+				header: undefined,
+				text: `Our showroom awaits you with the best prices on gold!\n\nVisit us to explore our latest collections and find the perfect piece.`,
+				footer: "Please select an  option",
+				buttons: [
+					{ id: 107, text: "Yelahanka Location" },
+					{ id: 108, text: "Kolar Location " },
+					{ id: 109, text: "Main Menu" }
+				]
 			}
-
-		} else {
-			return { type: "text", message: "You are not checkin in yet. Please send the current 📍 location for Check-in" }
 		}
 	}
-	if (option.id === "104") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			let is_employee_ticket = await SessionTickets.findOne({ mobileNo: phonenumber });
-			if (is_employee_ticket) {
-				const ticket_no = Math.floor(Math.random() * 100000000)
-				let tickno = ticket_no
-				let is_employee_ticketfound = await EmployeeTickets.findOne({ ticket_no: ticket_no });
-				if (is_employee_ticketfound) {
-					const ticket_no1 = Math.floor(Math.random() * 100000000)
-					const newTicket = await EmployeeTickets.create({
-						employeeId: is_employee_login.employeeId._id.toString(),
-						mobileNo: phonenumber,
-						issueDepartmentId: is_employee_ticket.issueDepartmentId._id.toString(),
-						description: is_employee_ticket.description,
-						imageUrl: is_employee_ticket.imageUrl,
-						ticket_no: ticket_no1,
-						issuePriority: is_employee_ticket.issuePriority,
-						latitude: is_employee_ticket.issue_latitude,
-						longitude: is_employee_ticket.issue_longitude
-					});
-					tickno = ticket_no1
-				} else {
-					const newTicket = await EmployeeTickets.create({
-						employeeId: is_employee_login.employeeId._id.toString(),
-						mobileNo: phonenumber,
-						issueDepartmentId: is_employee_ticket.issueDepartmentId._id.toString(),
-						description: is_employee_ticket.description,
-						imageUrl: is_employee_ticket.imageUrl,
-						ticket_no: ticket_no,
-						issuePriority: is_employee_ticket.issuePriority,
-						latitude: is_employee_ticket.issue_latitude,
-						longitude: is_employee_ticket.issue_longitude
-					});
-					tickno = ticket_no
-				}
-
-				let employee_data = await Employees.findOne({ mobileNo: phonenumber });
-				let department_data = await Department.findOne({ _id: is_employee_ticket.issueDepartmentId._id.toString() });
-				let manager_data = await Manager.findOne({ departmentId: is_employee_ticket.issueDepartmentId._id.toString() });
-				await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-				return {
-					type: "button_thank",
-					message: {
-						header: undefined,
-						text: `Thank you for bringing the issue to our attention.. Your Ticket Id is - ` + tickno.toString() + '\n\nIssue Description\n\n' + is_employee_ticket.description,
-						footer: "Please select an  option",
-						buttons: [
-							{ id: 101, text: "Raise an Issue " },
-							{ id: 102, text: "Issue Status " },
-							{ id: 103, text: "Check Out " }
-						]
-					},
-					employee_name: employee_data.firstName + " " + employee_data.lastName,
-					description: is_employee_ticket.description,
-					imageUrl: is_employee_ticket.imageUrl,
-					department_name: department_data.name,
-					department_mobileno: manager_data.mobileNo,
-					lat: is_employee_ticket.issue_latitude,
-					lang: is_employee_ticket.issue_longitude,
-					issue_id: tickno.toString(),
-					issue_date: is_employee_ticket.createdAt
-
-				}
-			} else {
-				let department_data = await Department.find({ status: true });
-				return {
-					type: "list",
-					message: {
-						// header: "Select Department",
-						text: "Choose the concerned Department to raise an Issue",
-						// footer: "Select an option",
-						options: department_data.map((dep, index) => {
-							let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-							let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-							return {
-								id: `${dep._id.toString()}`,
-								title: depname,
-								text: depDesc
-							}
-						})
+	if (option.id === "107") {
+		return {
+			type: "imageLocation",
+			message: {
+				header: `${process.env.SERVER_URL}public/store_image.jpg`,
+				text: 'Welcome to Yelahanka Branch \n\nCheck out this location!',
+				latitude: '13.093621273486704',
+				longitude: '77.58230287116436'
+			}
+		}
+	}
+	if (option.id === "108") {
+		return {
+			type: "imageLocation",
+			message: {
+				header: `${process.env.SERVER_URL}public/store_image2.jpg`,
+				text: 'Welcome to kolar Branch \n\nCheck out this location!',
+				latitude: '13.136892893055961',
+				longitude: '78.13037966473152'
+			}
+		}
+	}
+	if (option.id === "109") {
+		const listdata = [
+			// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+			{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+		]
+		// if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
+		// const user = await User.findOne({ MobileNumber: phonenumber });
+		// if (!user) {
+		// 	await User.create({
+		// 		UserName: username,
+		// 		MobileNumber: phonenumber
+		// 	});
+		// }
+		return {
+			type: "list",
+			message: {
+				header: `${process.env.SERVER_URL}public/store_image.jpg`,
+				text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+				footer: "please choose below options..",
+				buttontext: 'Show options',
+				options: listdata.map((dep, index) => {
+					return {
+						id: `${dep._id}`,
+						title: dep.title,
+						text: dep.text
 					}
-				}
+				})
 			}
-		} else {
-			return { type: "text", message: "You are not checkin in yet. Please send the current 📍 location for Check-in" }
 		}
 	}
-	if (option.id === "105") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-			return {
-				type: "button",
-				message: {
-					header: undefined,
-					text: `Thank you for confirmation...`,
-					footer: "Please select an  option",
-					buttons: [
-						{ id: 101, text: "Raise an Issue " },
-						{ id: 102, text: "Issue Status " },
-						{ id: 103, text: "Check Out " }
-					]
-				}
-			}
-		} else {
-			return { type: "text", message: "You are not checkin in yet. Please send the current 📍 location for Check-in" }
-		}
-	}
+
+
 
 	if (option?.name == "flow") {  //ticketchecking
 		console.log(JSON.parse(option.response_json))
@@ -810,298 +751,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 	return { type: "text", message: "Invalid identifier received" }
 }
 
-// Parse the button or list clicks from user
-const handleInteractiveUser = async (option, phonenumber, username, author_data) => {
-	console.log("option data")
-	console.log(option)
 
-	console.log("message")
-	console.log(phonenumber)
-	console.log(username)
-	const today = new Date()
-	const currentDate = new Date();
-	const dateOnly = currentDate.toISOString().split('T')[0];
-
-
-	if (option.id === "101") {
-
-		await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-		let department_data = await Department.find({ status: true });
-		return {
-			type: "list",
-			message: {
-				// header: "Select Department",
-				text: "Choose the concerned Department",
-				// footer: "Select an option",
-				options: department_data.map((dep, index) => {
-					let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-					let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-					return {
-						id: `${dep._id.toString()}`,
-						title: depname,
-						text: depDesc
-					}
-				})
-			}
-		}
-
-	}
-	if (option.id === "102") {
-
-		return {
-			type: "issue_status",
-			message: "Please enter your description as message..."
-		}
-
-	}
-	if (option.id === "103") {
-		let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber, checkInDate: dateOnly });
-		if (is_employee_login) {
-			if (is_employee_login.checkOutTime) {
-				return { type: "text", message: "You are already checkout for this day." }
-			} else {
-				return { type: "text", message: "Please send the current 📍 location for checkout" }
-			}
-
-		} else {
-			return { type: "text", message: "You are not checkin in yet. Please send the current 📍 location for Check-in" }
-		}
-	}
-	if (option.id === "104") {
-		// let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber,checkInDate:dateOnly });
-		// 	    if(is_employee_login){
-		let is_employee_ticket = await SessionTickets.findOne({ mobileNo: phonenumber });
-		if (is_employee_ticket) {
-			const ticket_no = Math.floor(Math.random() * 100000000)
-			let tickno = ticket_no
-			let is_employee_ticketfound = await AuthorTickets.findOne({ ticket_no: ticket_no });
-			if (is_employee_ticketfound) {
-				const ticket_no1 = Math.floor(Math.random() * 100000000)
-				const newTicket = await AuthorTickets.create({
-					authourId: author_data._id.toString(),
-					mobileNo: phonenumber,
-					issueDepartmentId: is_employee_ticket.issueDepartmentId._id.toString(),
-					description: is_employee_ticket.description,
-					imageUrl: is_employee_ticket.imageUrl,
-					ticket_no: ticket_no1,
-					latitude: is_employee_ticket.issue_latitude,
-					longitude: is_employee_ticket.issue_longitude
-				});
-				tickno = ticket_no1
-			} else {
-				const newTicket = await AuthorTickets.create({
-					authourId: author_data._id.toString(),
-					mobileNo: phonenumber,
-					issueDepartmentId: is_employee_ticket.issueDepartmentId._id.toString(),
-					description: is_employee_ticket.description,
-					imageUrl: is_employee_ticket.imageUrl,
-					ticket_no: ticket_no,
-					latitude: is_employee_ticket.issue_latitude,
-					longitude: is_employee_ticket.issue_longitude
-				});
-				tickno = ticket_no
-			}
-
-			// let employee_data = await Employees.findOne({ mobileNo: phonenumber });
-			let department_data = await Department.findOne({ _id: is_employee_ticket.issueDepartmentId._id.toString() });
-			let manager_data = await Manager.findOne({ departmentId: is_employee_ticket.issueDepartmentId._id.toString() });
-			await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-			return {
-				type: "button_thank",
-				message: {
-					header: undefined,
-					text: `Thank you for bringing the issue to our attention.. Your Ticket Id is - ` + tickno.toString() + '\n\nIssue Description\n\n' + is_employee_ticket.description,
-					footer: "Please select an  option",
-					buttons: [
-						{ id: 101, text: "Raise an Issue " },
-						{ id: 102, text: "Issue Status " }
-					]
-				},
-				employee_name: author_data.username,
-				description: is_employee_ticket.description,
-				imageUrl: is_employee_ticket.imageUrl,
-				department_name: department_data.name,
-				department_mobileno: manager_data.mobileNo,
-				lat: is_employee_ticket.issue_latitude,
-				lang: is_employee_ticket.issue_longitude,
-				issue_id: tickno.toString(),
-				issue_date: is_employee_ticket.createdAt
-
-			}
-		} else {
-			let department_data = await Department.find({ status: true });
-			return {
-				type: "list",
-				message: {
-					// header: "Select Department",
-					text: "Choose the concerned Department to raise an Issue",
-					// footer: "Select an option",
-					options: department_data.map((dep, index) => {
-						let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-						let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-						return {
-							id: `${dep._id.toString()}`,
-							title: depname,
-							text: depDesc
-						}
-					})
-				}
-			}
-		}
-
-	}
-	if (option.id === "105") {
-
-		await SessionTickets.findOneAndDelete({ mobileNo: phonenumber });
-		return {
-			type: "button",
-			message: {
-				header: undefined,
-				text: `Thank you for confirmation...`,
-				footer: "Please select an  option",
-				buttons: [
-					{ id: 101, text: "Raise an Issue " },
-					{ id: 102, text: "Issue Status " }
-				]
-			}
-		}
-
-	}
-
-	if (option?.name == "flow") {  //ticketchecking
-		console.log(JSON.parse(option.response_json))
-		const resmess = JSON.parse(option.response_json)
-		if (resmess.screen_0_TextArea_0 != "undefined" && resmess.screen_0_TextArea_0 != null) {
-
-			const currentDate = new Date();
-			const dateOnly = currentDate.toISOString().split('T')[0];
-			// let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber,checkInDate:dateOnly });
-			// 			if(is_employee_login){
-			let is_employee_ticket = await SessionTickets.findOne({ mobileNo: phonenumber });
-			if (is_employee_ticket) {
-				await SessionTickets.findOneAndUpdate(
-					{ mobileNo: phonenumber },
-					{
-						description: resmess.screen_0_TextArea_0
-					}
-				)
-				return { type: "text", message: "Please send issue 📍 location " }
-				// return {
-				// 	type: "button",
-				// 	message: {
-				// 		header: undefined,
-				// 		text: "You have raised a complaint @ "+is_employee_ticket.issueDepartmentId.name+ " Department \n\n Your message is " +resmess.screen_0_TextArea_0+". \n\nPlease give confirmation below..  " ,
-				// 		buttons: [
-				// 			{ id: 104, text: "Yes" },
-				// 			{ id: 105, text: "No" }
-				// 		]
-				// 	}
-				// }
-
-			} else {
-				let department_data = await Department.find({ status: true });
-				return {
-					type: "list",
-					message: {
-						// header: "Select Department",
-						text: "Choose the concerned Department to raise an Issue",
-						// footer: "Select an option",
-						options: department_data.map((dep, index) => {
-							let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-							let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-							return {
-								id: `${dep._id.toString()}`,
-								title: depname,
-								text: depDesc
-							}
-						})
-					}
-				}
-			}
-
-
-
-		} else if (resmess.screen_0_TextInput_0 != "undefined" && resmess.screen_0_TextInput_0 != null) {
-			const currentDate = new Date();
-			const dateOnly = currentDate.toISOString().split('T')[0];
-			// let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber,checkInDate:dateOnly });
-			// 			if(is_employee_login){
-			let is_employee_ticket = await AuthorTickets.findOne({ ticket_no: resmess.screen_0_TextInput_0 });
-			if (is_employee_ticket) {
-				let responseMessage;
-				responseMessage = "Ticket status is " + is_employee_ticket.status;
-				if (is_employee_ticket.managerDescription) {
-					responseMessage = responseMessage + ". Department Manager added a message => " + is_employee_ticket.managerDescription;
-				}
-				if (is_employee_ticket.commissionerDescription) {
-					responseMessage = responseMessage + ". Commissioner  added a message => " + is_employee_ticket.commissionerDescription;
-				}
-				return { type: "text", message: responseMessage }
-
-			} else {
-				return {
-					type: "button",
-					message: {
-						header: undefined,
-						text: `We did't found any TICKET in this ID, please try again`,
-						footer: "Please select an  option",
-						buttons: [
-							{ id: 101, text: "Raise an Issue " },
-							{ id: 102, text: "Issue Status " }
-						]
-					}
-				}
-			}
-
-			// }else{
-			// 	return { type: "text", message: "You are not Check-in in yet. Please send the current 📍 location for Check-in" }
-			// }
-		}
-		else {
-			let department_data = await Department.find({ status: true });
-			return {
-				type: "list",
-				message: {
-					// header: "Select Department",
-					text: "Not valid Input, Choose the concerned Department to raise an Issue",
-					// footer: "Select an option",
-					options: department_data.map((dep, index) => {
-						let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-						let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-						return {
-							id: `${dep._id.toString()}`,
-							title: depname,
-							text: depDesc
-						}
-					})
-				}
-			}
-		}
-		//screen_0_TextInput_0
-
-	}
-	const optionid = option?.id;
-
-	if (optionid.length == "24") {
-		// let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber,checkInDate:dateOnly });
-		// 	    if(is_employee_login){
-
-		await SessionTickets.create({
-			employeeId: author_data._id.toString(),
-			mobileNo: phonenumber,
-			issueDepartmentId: optionid
-		});
-		return { type: "text", message: "Please send the image/pic to enable the resolution quick" }
-		// }else{
-		// 	return { type: "text", message: "You are not Check-in in yet. Please send the current 📍 location for Check-in" }
-		// }
-	}
-	if (option.id == "Yes") {
-		return { type: "text", message: "Thank you for bringing the issue to our attention. " }
-	}
-
-	return { type: "text", message: "Invalid identifier received" }
-}
 const handleImage = async (imageData, phonenumber, username) => {
 	// const imageData={
 	// 	mime_type: 'image/jpeg',
@@ -1177,78 +827,7 @@ const handleImage = async (imageData, phonenumber, username) => {
 		return { type: "text", message: "You are not Check-in in yet. Please send the current 📍 location for Check-in" }
 	}
 }
-const handleImageUser = async (imageData, phonenumber, username, author_data) => {
-	// const imageData={
-	// 	mime_type: 'image/jpeg',
-	// 	sha256: '2yb545Oh9n0sECA/8B8bAgW3txBs1oMC/bdGA325I3Y=',
-	// 	id: '472567508851730'
-	//   }
-	const response = await axios.get(`https://graph.facebook.com/${process.env.VERSION}/${imageData.id}`, {
-		headers: {
-			'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`
-		}
-	})
 
-	const link = response.data.url
-
-	// file binary
-	const file = await axios.get(link, {
-		headers: {
-			'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`
-		},
-		responseType: "arraybuffer"
-	})
-
-	const extention = mime.extension(imageData.mime_type)
-
-	const hash = uuid()
-
-	const filename = `${hash}.${extention}`
-
-	// save file to server
-	await fs.writeFile(
-		path.join(__dirname, "..", "public", filename), file.data
-	)
-
-	console.log(filename)
-	const currentDate = new Date();
-	const dateOnly = currentDate.toISOString().split('T')[0];
-	// let is_employee_login = await EmployeeTimings.findOne({ mobileNo: phonenumber,checkInDate:dateOnly });
-	// 		    if(is_employee_login){
-	let is_employee_ticket = await SessionTickets.findOne({ mobileNo: phonenumber });
-	if (is_employee_ticket) {
-		await SessionTickets.findOneAndUpdate(
-			{ mobileNo: phonenumber },
-			{
-				imageUrl: filename
-			}
-		)
-		return {
-			type: "issue_description",
-			message: "Please enter your description as message..."
-		}
-	} else {
-		let department_data = await Department.find({ status: true });
-		return {
-			type: "list",
-			message: {
-				// header: "Select Department",
-				text: "Choose the concerned Department to raise an Issue",
-				// footer: "Select an option",
-				options: department_data.map((dep, index) => {
-					let depname = dep.name.length > 20 ? dep.name.substring(0, 20) + '...' : dep.name;
-					let depDesc = dep.Description.length > 20 ? dep.Description.substring(0, 20) + '...' : dep.Description;
-					return {
-						id: `${dep._id.toString()}`,
-						title: depname,
-						text: depDesc
-					}
-				})
-			}
-		}
-	}
-
-}
 
 const handleLocation = async (location, phonenumber, username) => {
 	console.log(location)
@@ -1551,6 +1130,11 @@ const receiveEvents = async (req, res) => {
 					reply = await handleText(messagebody.text.body, parser.nationalNumber, username)
 				}
 
+				if (reply.type === "list") {
+					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
+				} else if (reply.type === 'imageLocation') {
+					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
+				}
 
 				else {
 					prepareschema = preparePlainText(phonenumber, "Something went wrong")
