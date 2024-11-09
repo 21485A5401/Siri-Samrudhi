@@ -1123,8 +1123,8 @@ const receiveEvents = async (req, res) => {
 			let prepareschema
 			let prepareschema_dep
 			// let existingAuthor = await Author.findOne({ phone: parser.nationalNumber });
-			let User = await User.findOne({ MobileNumber: parser.nationalNumber });
-			if (User) {
+			let UserData = await User.findOne({ MobileNumber: parser.nationalNumber });
+			if (UserData) {
 
 				if (messagebody.type === "text") {
 					reply = await handleText(messagebody.text.body, parser.nationalNumber, username)
