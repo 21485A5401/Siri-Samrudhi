@@ -58,17 +58,18 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 			} : undefined,
 			"action": {
 				"button": buttontext ? buttontext : "Show options",
-				"sections":
-				{
-					"title": "Main Menu Options",
-					"rows": options.map(option => {
-						return {
-							"id": option.id,
-							"title": option.title,
-							"description": option.text,
-						};
-					})
-				}
+				"sections": [
+					{
+						"title": "Main Menu Options",
+						"rows": options.map(option => {
+							return {
+								"id": option.id,
+								"title": option.title,
+								"description": option.text,
+							};
+						})
+					}
+				]
 			}
 		}
 	}
