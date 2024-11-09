@@ -1128,8 +1128,9 @@ const receiveEvents = async (req, res) => {
 
 				if (messagebody.type === "text") {
 					reply = await handleText(messagebody.text.body, parser.nationalNumber, username)
+				} else if (messagebody.type === "interactive") {
+					reply = await handleInteractive(messagebody.interactive[messagebody.interactive.type], parser.nationalNumber, username)
 				}
-
 				if (reply.type === "list") {
 					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
 				} else if (reply.type === 'imageLocation') {
