@@ -44,12 +44,12 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 		"type": "interactive",
 		"interactive": {
 			"type": "list",
-			"header": header ? {
+			"header": {
 				"type": "image",
 				"image": {
-					"link": header
+					"link": `${process.env.SERVER_URL}${header}`
 				}
-			} : undefined,
+			},
 			"body": {
 				"text": message
 			},
@@ -450,7 +450,7 @@ const handleText = async (message, phonenumber, username) => {
 	return {
 		type: "list",
 		message: {
-			header: `${process.env.SERVER_URL}public/store_image.jpg`,
+			header: `public/store_image.jpg`,
 			text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
 			footer: "please choose below options..",
 			buttontext: 'Show options',
@@ -589,7 +589,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		return {
 			type: "list",
 			message: {
-				header: `${process.env.SERVER_URL}public/store_image.jpg`,
+				header: `public/store_image.jpg`,
 				text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
 				footer: "please choose below options..",
 				buttontext: 'Show options',
