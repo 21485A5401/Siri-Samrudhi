@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const mime = require("mime-types")
 const User = require("../models/User")
-dotenv.config()
+dotenv.config();
 
 
 const randomString = (length) => {
