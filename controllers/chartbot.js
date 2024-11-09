@@ -1122,7 +1122,7 @@ const receiveEvents = async (req, res) => {
 			if (!user) {
 				await User.create({
 					UserName: username,
-					MobileNumber: phonenumber
+					MobileNumber: parser.nationalNumber
 				});
 			}
 			let UserData = await User.findOne({ MobileNumber: parser.nationalNumber });
