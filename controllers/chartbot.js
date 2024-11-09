@@ -474,7 +474,7 @@ const prepareimageLocation = (recipient, header, text, lat, lang) => {
 		"to": recipient,
 		"type": "interactive",
 		"interactive": {
-			"type": "button",
+			"type": "cta_url",
 			"header": {
 				"type": "image",
 				"image": {
@@ -488,13 +488,11 @@ const prepareimageLocation = (recipient, header, text, lat, lang) => {
 				"text": "Tap below for more details"
 			},
 			"action": {
-				"buttons": [
-					{
-						"type": "url",
-						"text": "View Location on Map",
-						"url": `https://www.google.com/maps?q=${lat},${lang}`
-					}
-				]
+				"name": "cta_url",
+				"parameters": {
+					"display_text": "View Location on Map",
+					"url": `https://www.google.com/maps?q=${lat},${lang}`
+				}
 			}
 		}
 
@@ -1139,7 +1137,7 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
 				} else if (reply.type === 'imageLocation') {
 					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
-				} else if(reply.type === 'button'){
+				} else if (reply.type === 'button') {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				}
 
