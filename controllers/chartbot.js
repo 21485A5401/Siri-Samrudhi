@@ -491,7 +491,7 @@ const prepareimageLocation = (recipient, header, text, lat, lang) => {
 				"buttons": [
 					{
 						"type": "url",
-						"title": "View Location on Map",
+						"text": "View Location on Map",
 						"url": `https://www.google.com/maps?q=${lat},${lang}`
 					}
 				]
