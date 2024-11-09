@@ -1139,6 +1139,8 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
 				} else if (reply.type === 'imageLocation') {
 					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
+				} else if(reply.type === 'button'){
+					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				}
 
 				else {
