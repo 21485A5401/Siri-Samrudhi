@@ -1252,7 +1252,7 @@ const receiveEvents = async (req, res) => {
 								item.message.caption,
 								item.message.text
 							);
-							// You can send or process the prepareschema here.
+							sendMessage(prepareschema)
 						}
 					});
 				}
