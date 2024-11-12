@@ -7,6 +7,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const mime = require("mime-types")
 const User = require("../models/User")
+const Products = require("../models/Products")
 dotenv.config();
 
 
@@ -130,6 +131,23 @@ const prepareImage = (recipient, link, caption) => {
 
 	return JSON.stringify(data)
 }
+
+const prepareMessage = (recipient, imageLink, caption, text) => {
+	const data = {
+		"messaging_product": "whatsapp",
+		"recipient_type": "individual",
+		"to": recipient,
+		"type": "image",
+		"image": {
+			"link": imageLink,
+			"caption": caption || ""
+		},
+		"text": text || ""  // Adding text alongside the image
+	};
+
+	return JSON.stringify(data);
+};
+
 
 const prepareMedia = (recipient, link, filename, caption) => {
 	const data = {
@@ -575,6 +593,20 @@ const handleInteractive = async (option, phonenumber, username) => {
 				]
 			}
 		}
+	}
+	if (option.id === "104") {
+		const products = await Products.find({});
+		const productsArray = products.map((product) => {
+
+			return {
+				type: "NewArrivals",
+				message: {
+					header: `${process.env.SERVER_URL}public/${product?.image}`,
+					caption: product?.image,
+					text: product?.description,
+				}
+			}
+		})
 	}
 	if (option.id === "105") {
 		return {
@@ -1204,8 +1236,10 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
 				} else if (reply.type === 'button') {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
-				}else if (reply.type === 'agent') {
+				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
+				} else if (reply.type === 'NewArrivals') {
+					prepareschema = prepareMessage(phonenumber, reply.message.header, reply.message.caption, reply.message.text);
 				}
 
 				else {
