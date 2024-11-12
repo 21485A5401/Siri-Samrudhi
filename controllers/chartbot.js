@@ -1269,7 +1269,6 @@ const receiveEvents = async (req, res) => {
 							}
 						}
 					});
-					reply = await handleText(messagebody.text.body, parser.nationalNumber, username)
 				}
 
 
