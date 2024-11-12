@@ -1243,8 +1243,18 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
-				} else if (reply[0].type === 'NewArrivals') {
-					prepareschema = prepareMessage(phonenumber, reply[0].message.header, reply[0].message.caption, reply[0].message.text);
+				} else if (reply.some(item => item.type === 'NewArrivals')) {
+					reply.forEach(item => {
+						if (item.type === 'NewArrivals') {
+							prepareschema = prepareMessage(
+								phonenumber,
+								item.message.header,
+								item.message.caption,
+								item.message.text
+							);
+							// You can send or process the prepareschema here.
+						}
+					});
 				}
 
 				else {
