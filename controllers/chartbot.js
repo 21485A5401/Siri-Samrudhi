@@ -605,7 +605,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 			type: "NewArrivals",
 			message: {
 				header: `${process.env.SERVER_URL}public/${products[0]?.image}`,
-				caption: products[0]?.image,
+				caption: products[0]?.description,
 				text: products[0]?.description,
 			}
 		}
