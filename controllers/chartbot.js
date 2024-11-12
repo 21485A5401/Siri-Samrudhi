@@ -607,6 +607,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 				}
 			}
 		})
+		return productsArray;
 	}
 	if (option.id === "105") {
 		return {
