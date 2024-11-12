@@ -1244,18 +1244,33 @@ const receiveEvents = async (req, res) => {
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
 				} else if (reply.some(item => item.type === 'NewArrivals')) {
+					const sentMessages = new Set();  // To track sent messages and avoid duplicates
+
 					reply.forEach(item => {
 						if (item.type === 'NewArrivals') {
-							prepareschema = prepareMessage(
-								phonenumber,
-								item.message.header,
-								item.message.caption,
-								item.message.text
-							);
-							sendMessage(prepareschema)
+							const messageKey = item.message.header; // You can use the image link (or another unique identifier) as the key
+
+							// Check if this message has already been sent
+							if (!sentMessages.has(messageKey)) {
+								const prepareschemaarrivals = prepareMessage(
+									phonenumber,
+									item.message.header,
+									item.message.caption,
+									item.message.text
+								);
+
+								// Send the message
+								sendMessage(prepareschemaarrivals);
+
+								// Mark this message as sent
+								sentMessages.add(messageKey);
+							} else {
+								console.log('Skipping duplicate message:', messageKey);
+							}
 						}
 					});
 				}
+
 
 				else {
 					prepareschema = preparePlainText(phonenumber, "Something went wrong")
