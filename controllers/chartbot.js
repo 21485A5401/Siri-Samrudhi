@@ -598,19 +598,20 @@ const handleInteractive = async (option, phonenumber, username) => {
 	}
 	if (option.id === "104") {
 		const products = await Products.find();
-		// const productsArray = products.map((product) => {
-		console.log("products",products);
+		const productsArray = products.map((product) => {
 
-		return {
-			type: "NewArrivals",
-			message: {
-				header: `${process.env.SERVER_URL}public/${products[0]?.image}`,
-				caption: products[0]?.description,
-				text: products[0]?.description,
+			return {
+				type: "NewArrivals",
+				message: {
+					header: `${process.env.SERVER_URL}public/${product?.image}`,
+					caption: product?.description,
+					text: product?.description,
+				}
 			}
-		}
-		// })
-		// return productsArray;
+		})
+		console.log(productsArray);
+		return productsArray;
+
 	}
 	if (option.id === "105") {
 		return {
