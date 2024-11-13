@@ -591,7 +591,9 @@ const handleInteractive = async (option, phonenumber, username) => {
 				text: `*Our Schemes:*\n\n1.Golden Dreams.\n2.Golden Future.\n3.Golden Nidhi.`,
 				footer: "Please select an option, For More Details",
 				buttons: [
-					{ id: 109, text: "Main Menu" }
+					{ id: 110, text: "Golden Dreams" },
+					{ id: 111, text: "Golden Future" },
+					{ id: 112, text: "Golden Nidhi" }
 				]
 			}
 		}
@@ -700,6 +702,45 @@ const handleInteractive = async (option, phonenumber, username) => {
 						text: dep.text
 					}
 				})
+			}
+		}
+	}
+	if (option.id === "110") {
+		return {
+			type: "button",
+			message: {
+				header: `${process.env.SERVER_URL}public/schemes.pdf`,
+				text: `1.Golden Dreams.\n\n1. This is purely an advance for Jewellery purchase plan. NO REFUND of money is allowed under any circumstances.\n2. Members can start the subscription of Amount starting from Rs 3000 to Rs 50000/-.`,
+				footer: "Please select an option, For More Details",
+				buttons: [
+					{ id: 109, text: "Main Menu" }
+				]
+			}
+		}
+	}
+	if (option.id === "111") {
+		return {
+			type: "button",
+			message: {
+				header: `${process.env.SERVER_URL}public/schemes.pdf`,
+				text: `2.Golden Future.\n\n1. This is purely an advance for Jewellery purchase plan. NO REFUND of money is allowed under any circumstances.\n2. Members can start the subscription of Amount starting from Rs 3000 to Rs 50000/-.`,
+				footer: "Please select an option, For More Details",
+				buttons: [
+					{ id: 109, text: "Main Menu" }
+				]
+			}
+		}
+	}
+	if (option.id === "112") {
+		return {
+			type: "button",
+			message: {
+				header: `${process.env.SERVER_URL}public/schemes.pdf`,
+				text: `3.Golden Nidhi.\n\n1. This is purely an advance for Jewellery purchase plan. NO REFUND of money is allowed under any circumstances.\n2. Members can start the subscription of Amount starting from Rs 3000 to Rs 50000/-.`,
+				footer: "Please select an option, For More Details",
+				buttons: [
+					{ id: 109, text: "Main Menu" }
+				]
 			}
 		}
 	}
