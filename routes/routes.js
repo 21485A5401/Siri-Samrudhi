@@ -19,6 +19,16 @@ const storage = multer.diskStorage({
     }
 });
 
+// Set up multer storage
+const excelstorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/Excel/'); // Specify the directory to save the uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Set file name with extension
+    }
+});
+
 // Filter to accept only image files
 const fileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image')) {
@@ -29,6 +39,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
+const uploadExcel = multer({ storage: excelstorage });
 
 
 // chartbot routes
@@ -43,9 +54,13 @@ router.get('/getdata', admin.getapi);
 router.post('/Register', admin.adminRegister);
 router.post('/Login', admin.adminLogin);
 router.get('/UsersList', isLogin, admin.getUsers);
+router.get('/templates', isLogin, admin.templates);
 router.get('/getDashboardCount', isLogin, admin.getDashboardCount);
-router.post('/addProduct', upload.single('image'), admin.addProduct);
+router.post('/addProduct', isLogin, upload.single('image'), admin.addProduct);
 router.put('/editProduct', isLogin, upload.single('image'), admin.editProduct);
-router.get('/getProduct', admin.getProduct);
+router.get('/getProduct', isLogin, admin.getProduct);
+router.get('/getUsersExcelDownload', isLogin, admin.getUsersExcelDownload);
+router.post('/sendBulkMessage', isLogin, admin.sendBulkMessage);
+router.get('/getbulkmessages', isLogin, admin.getbulkmessages);
 
 module.exports = router;
