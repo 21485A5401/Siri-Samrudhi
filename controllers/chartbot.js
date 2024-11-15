@@ -1332,10 +1332,10 @@ const receiveEvents = async (req, res) => {
 				} else if (reply.type === 'joinGroup') {
 					prepareschema = preparechartgroup(phonenumber, reply.message.text);
 				} else if (reply.type === 'Celebraties') {
-					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpeg`
-					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpeg`
-					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpeg`
-					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpeg`
+					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpg`
+					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpg`
+					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpg`
+					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpg`
 					prepareschema = prepareImage(phonenumber, image1);
 					prepareschema = prepareImage(phonenumber, image2);
 					prepareschema = prepareImage(phonenumber, image3);
