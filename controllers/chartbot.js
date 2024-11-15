@@ -1337,9 +1337,12 @@ const receiveEvents = async (req, res) => {
 					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpg`
 					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpg`
 					prepareschema = prepareImage(phonenumber, image1);
-					prepareschema = prepareImage(phonenumber, image2);
-					prepareschema = prepareImage(phonenumber, image3);
-					prepareschema = prepareImage(phonenumber, image4);
+					let prepareschema1 = prepareImage(phonenumber, image2);
+					let prepareschema2 = prepareImage(phonenumber, image3);
+					let prepareschema3 = prepareImage(phonenumber, image4);
+					await sendMessage(prepareschema1)
+					await sendMessage(prepareschema2)
+					await sendMessage(prepareschema3)
 				}
 				else if (reply.some(item => item.type === 'NewArrivals')) {
 					const sentMessages = new Set();  // To track sent messages and avoid duplicates
