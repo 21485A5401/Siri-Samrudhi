@@ -661,7 +661,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 	}
 	if (option.id === "106") {
 		const listdata = [
-			// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+			{ _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
 			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
@@ -672,7 +672,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 			type: "list",
 			message: {
 				// header: `public/store_image.jpeg`,
-				text: `🛍️ *About Siri Samruddhi Gold Palace:*\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\n*Yelahanka Branch:*\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101.\n\n*Kolar Branch:*\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand main road 16th B Main Road, Bengaluru, Karnataka 560065.`,
+				text: `🛍️ *About Siri Samruddhi Gold Palace:*\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\n*Yelahanka Branch:*\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101.\n\n*Kolar Branch:*\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand main road 16th B Main Road, Bengaluru, Karnataka 560065.\n\nFacebook URl: https://www.facebook.com/share/56HpUwkiqgBA3gGp/?mibextid=qi2Omg\nInstagram URL: https://www.instagram.com/sirisamruddhigoldpalace/\nYoutube URl : https://www.youtube.com/@SiriSamruddhigoldpalace`,
 				footer: "please choose below options..",
 				buttontext: 'Show options',
 				options: listdata.map((dep, index) => {
@@ -709,7 +709,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 	}
 	if (option.id === "109") {
 		const listdata = [
-			// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+			{ _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
 			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
@@ -1320,7 +1320,7 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
-				}  else if (reply.type === 'joinGroup') {
+				} else if (reply.type === 'joinGroup') {
 					prepareschema = preparechartgroup(phonenumber, reply.message.text);
 				} else if (reply.some(item => item.type === 'NewArrivals')) {
 					const sentMessages = new Set();  // To track sent messages and avoid duplicates
