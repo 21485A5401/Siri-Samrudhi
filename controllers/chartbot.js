@@ -675,7 +675,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 			type: "list",
 			message: {
 				// header: `public/store_image.jpeg`,
-				text: `🛍️ *About Siri Samruddhi Gold Palace:*\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\n*Yelahanka Branch:*\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101.\n\n*Kolar Branch:*\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand main road 16th B Main Road, Bengaluru, Karnataka 560065.\n\nWhatsapp URL : https://whatsapp.com/channel/0029Va93M4cKmCPGRwv6lc1k\nFacebook URl: https://www.facebook.com/share/56HpUwkiqgBA3gGp/?mibextid=qi2Omg\nInstagram URL: https://www.instagram.com/sirisamruddhigoldpalace/\nYoutube URl : https://www.youtube.com/@SiriSamruddhigoldpalace`,
+				text: `🛍️ *About Siri Samruddhi Gold Palace:*\nOur passion is bringing you the finest jewelry with a promise of purity and quality.\n\n*Yelahanka Branch:*\n#54A, #T22, Opp.KSRTC Bus Stand, Ward No 22,\n Brahmin's Street/Kalammagudi Road, kolar - 563101.\n\n*Kolar Branch:*\n1271/A Chikkabommasandra circle Yelahanka newtown bus stand main road 16th B Main Road, Bengaluru, Karnataka 560065.\n\nWhatsapp URL : https://whatsapp.com/channel/0029Va93M4cKmCPGRwv6lc1k\nFacebook URl: https://www.facebook.com/share/56HpUwkiqgBA3gGp/?mibextid=qi2Omg\nInstagram URL: https://www.instagram.com/sirisamruddhigoldpalace/\nYoutube URl : https://www.youtube.com/@SiriSamruddhigoldpalace\nWebsite URL : https://sirisamruddhigold.in/`,
 				footer: "please choose below options..",
 				buttontext: 'Show options',
 				options: listdata.map((dep, index) => {
