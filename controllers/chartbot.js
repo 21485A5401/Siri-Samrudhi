@@ -1343,6 +1343,7 @@ const receiveEvents = async (req, res) => {
 					await sendMessage(prepareschema1)
 					await sendMessage(prepareschema2)
 					await sendMessage(prepareschema3)
+					reply = await handleText(messagebody.text.body, parser.nationalNumber, username)
 				}
 				else if (reply.some(item => item.type === 'NewArrivals')) {
 					const sentMessages = new Set();  // To track sent messages and avoid duplicates
