@@ -1331,7 +1331,17 @@ const receiveEvents = async (req, res) => {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
 				} else if (reply.type === 'joinGroup') {
 					prepareschema = preparechartgroup(phonenumber, reply.message.text);
-				} else if (reply.some(item => item.type === 'NewArrivals')) {
+				} else if (reply.type === 'Celebraties') {
+					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpeg`
+					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpeg`
+					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpeg`
+					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpeg`
+					prepareschema = prepareImage(phonenumber, image1);
+					prepareschema = prepareImage(phonenumber, image2);
+					prepareschema = prepareImage(phonenumber, image3);
+					prepareschema = prepareImage(phonenumber, image4);
+				}
+				else if (reply.some(item => item.type === 'NewArrivals')) {
 					const sentMessages = new Set();  // To track sent messages and avoid duplicates
 
 					reply.forEach(item => {
@@ -1358,16 +1368,7 @@ const receiveEvents = async (req, res) => {
 						}
 					});
 				}
-				else if (reply.type === 'Celebraties') {
-					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpeg`
-					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpeg`
-					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpeg`
-					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpeg`
-					prepareschema = prepareImage(phonenumber, image1);
-					prepareschema = prepareImage(phonenumber, image2);
-					prepareschema = prepareImage(phonenumber, image3);
-					prepareschema = prepareImage(phonenumber, image4);
-				}
+
 
 
 				else {
