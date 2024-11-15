@@ -461,7 +461,7 @@ const handleTextNoEmployee = async (message, phonenumber, username) => {
 const handleText = async (message, phonenumber, username) => {
 	console.log(message.toLowerCase())
 	const listdata = [
-		// { _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
+		{ _id: '101', title: 'GOld Rate', text: 'GOld Rate' },
 		{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
 		{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 		{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
@@ -553,6 +553,34 @@ const preparechatagent = (recipient, text) => {
 	return JSON.stringify(data);
 }
 
+const preparechartgroup = (recipient, text) => {
+
+	const data = {
+		"messaging_product": "whatsapp",
+		"recipient_type": "individual",
+		"to": recipient,
+		"type": "interactive",
+		"interactive": {
+			"type": "cta_url",
+			"body": {
+				"text": text
+			},
+			"footer": {
+				"text": "Tap below for more details"
+			},
+			"action": {
+				"name": "cta_url",
+				"parameters": {
+					"display_text": "Gold Rate",
+					"url": `https://whatsapp.com/channel/0029Va93M4cKmCPGRwv6lc1k`
+				}
+			}
+		}
+
+	}
+	return JSON.stringify(data);
+}
+
 
 
 // Parse the button or list clicks from user
@@ -567,6 +595,14 @@ const handleInteractive = async (option, phonenumber, username) => {
 	const currentDate = new Date();
 	const dateOnly = currentDate.toISOString().split('T')[0];
 
+	if (option.id === "101") {
+		return {
+			type: "joinGroup",
+			message: {
+				text: 'Welcome to SiriSamrudhi Whatsapp Group. \n\nClick below to Join Whatsapp Group!',
+			}
+		}
+	}
 
 	if (option.id === "102") {
 		return {
@@ -1284,6 +1320,8 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
+				}  else if (reply.type === 'joinGroup') {
+					prepareschema = preparechartgroup(phonenumber, reply.message.text);
 				} else if (reply.some(item => item.type === 'NewArrivals')) {
 					const sentMessages = new Set();  // To track sent messages and avoid duplicates
 
