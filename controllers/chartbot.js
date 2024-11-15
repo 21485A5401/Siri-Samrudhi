@@ -785,8 +785,30 @@ const handleInteractive = async (option, phonenumber, username) => {
 		}
 	}
 	if (option.id === '113') {
+		const listdata = [
+			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+			{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
+			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+			{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+		]
 		return {
 			type: "Celebraties",
+			message: {
+				header: `public/store_image.jpeg`,
+				text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+				footer: "please choose below options..",
+				buttontext: 'Show options',
+				options: listdata.map((dep, index) => {
+					return {
+						id: `${dep._id}`,
+						title: dep.title,
+						// text: dep.text
+					}
+				})
+			}
 		}
 	}
 
@@ -1340,9 +1362,11 @@ const receiveEvents = async (req, res) => {
 					let prepareschema1 = prepareImage(phonenumber, image2);
 					let prepareschema2 = prepareImage(phonenumber, image3);
 					let prepareschema3 = prepareImage(phonenumber, image4);
+					let prepareschema4 = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext);
 					await sendMessage(prepareschema1)
 					await sendMessage(prepareschema2)
 					await sendMessage(prepareschema3)
+					await sendMessage(prepareschema4)
 					// reply = await handleText('', parser.nationalNumber, username)
 				}
 				else if (reply.some(item => item.type === 'NewArrivals')) {
