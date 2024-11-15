@@ -66,7 +66,7 @@ const prepareList = (recipient, header, message, footer, options, buttontext) =>
 							return {
 								"id": option.id,
 								"title": option.title,
-								"description": option.text,
+								// "description": option.text,
 							};
 						})
 					}
@@ -462,13 +462,13 @@ const handleTextNoEmployee = async (message, phonenumber, username) => {
 const handleText = async (message, phonenumber, username) => {
 	console.log(message.toLowerCase())
 	const listdata = [
+		{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+		{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+		{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+		{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 		{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 		{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
-		{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
-		{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
-		{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
 		{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
-		{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 	]
 	// if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
 
@@ -483,7 +483,7 @@ const handleText = async (message, phonenumber, username) => {
 				return {
 					id: `${dep._id}`,
 					title: dep.title,
-					text: dep.text
+					// text: dep.text
 				}
 			})
 		}
@@ -663,13 +663,13 @@ const handleInteractive = async (option, phonenumber, username) => {
 	}
 	if (option.id === "106") {
 		const listdata = [
+			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
-			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
-			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
-			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
 			{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
-			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 		]
 		return {
 			type: "list",
@@ -682,7 +682,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 					return {
 						id: `${dep._id}`,
 						title: dep.title,
-						text: dep.text
+						// text: dep.text
 					}
 				})
 			}
@@ -712,13 +712,13 @@ const handleInteractive = async (option, phonenumber, username) => {
 	}
 	if (option.id === "109") {
 		const listdata = [
+			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
-			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
-			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
-			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
 			{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
-			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 		]
 		// if (message.toLowerCase() === 'hi' || message.toLowerCase() === 'hello') {
 		// const user = await User.findOne({ MobileNumber: phonenumber });
@@ -739,7 +739,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 					return {
 						id: `${dep._id}`,
 						title: dep.title,
-						text: dep.text
+						// text: dep.text
 					}
 				})
 			}
