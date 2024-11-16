@@ -1347,12 +1347,60 @@ const receiveEvents = async (req, res) => {
 					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
 				} else if (reply.type === 'imageLocation') {
 					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
+					const listdata = [
+						{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+						{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+						{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+						{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+						{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
+						{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+						{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+					]
+					const message = {
+						header: `public/store_image.jpeg`,
+						text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+						footer: "please choose below options..",
+						buttontext: 'Show options',
+						options: listdata.map((dep, index) => {
+							return {
+								id: `${dep._id}`,
+								title: dep.title,
+								// text: dep.text
+							}
+						})
+					}
+					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					await sendMessage(prepareschema4);
 				} else if (reply.type === 'button') {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
 				} else if (reply.type === 'joinGroup') {
 					prepareschema = preparechartgroup(phonenumber, reply.message.text);
+					const listdata = [
+						{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+						{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+						{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+						{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+						{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
+						{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+						{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+					]
+					const message = {
+						header: `public/store_image.jpeg`,
+						text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+						footer: "please choose below options..",
+						buttontext: 'Show options',
+						options: listdata.map((dep, index) => {
+							return {
+								id: `${dep._id}`,
+								title: dep.title,
+								// text: dep.text
+							}
+						})
+					}
+					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					await sendMessage(prepareschema4);
 				} else if (reply.type === 'Celebraties') {
 					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpg`
 					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpg`
