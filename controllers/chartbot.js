@@ -1363,10 +1363,30 @@ const receiveEvents = async (req, res) => {
 					let prepareschema2 = prepareImage(phonenumber, image3);
 					let prepareschema3 = prepareImage(phonenumber, image4);
 					let prepareschema4 = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext);
-					await sendMessage(prepareschema1)
-					await sendMessage(prepareschema2)
-					await sendMessage(prepareschema3)
-					await sendMessage(prepareschema4)
+					try {
+						await sendMessage(prepareschema1); // Send message with image2
+					} catch (error) {
+						console.error('Error sending image1:', error);
+					}
+
+					try {
+						await sendMessage(prepareschema2); // Send message with image3
+					} catch (error) {
+						console.error('Error sending image2:', error);
+					}
+
+					try {
+						await sendMessage(prepareschema3); // Send message with image4
+					} catch (error) {
+						console.error('Error sending image3:', error);
+					}
+
+					// Finally, send the list message
+					try {
+						await sendMessage(prepareschema4); // Send the list message last
+					} catch (error) {
+						console.error('Error sending list message:', error);
+					}
 					// reply = await handleText('', parser.nationalNumber, username)
 				}
 				else if (reply.some(item => item.type === 'NewArrivals')) {
@@ -1395,6 +1415,30 @@ const receiveEvents = async (req, res) => {
 							}
 						}
 					});
+					const listdata = [
+						{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
+						{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
+						{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+						{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
+						{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
+						{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
+						{ _id: '105', title: 'Chat with Our Agent', text: 'Chat with Our Agent' },
+					]
+					const message = {
+						header: `public/store_image.jpeg`,
+						text: `Hi ${username},\n\nwelcome to Siri Samruddhi Gold Palace.`,
+						footer: "please choose below options..",
+						buttontext: 'Show options',
+						options: listdata.map((dep, index) => {
+							return {
+								id: `${dep._id}`,
+								title: dep.title,
+								// text: dep.text
+							}
+						})
+					}
+					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					await sendMessage(prepareschema4);
 				}
 
 
