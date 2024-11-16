@@ -1346,7 +1346,7 @@ const receiveEvents = async (req, res) => {
 				if (reply.type === "list") {
 					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext)
 				} else if (reply.type === 'imageLocation') {
-					prepareschema = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
+					let prepareschema4 = prepareimageLocation(phonenumber, reply.message.header, reply.message.text, reply.message.latitude, reply.message.longitude);
 					const listdata = [
 						{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 						{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
@@ -1369,14 +1369,14 @@ const receiveEvents = async (req, res) => {
 							}
 						})
 					}
-					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					prepareschema = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
 					await sendMessage(prepareschema4);
 				} else if (reply.type === 'button') {
 					prepareschema = prepareButtons(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.buttons)
 				} else if (reply.type === 'agent') {
 					prepareschema = preparechatagent(phonenumber, reply.message.text);
 				} else if (reply.type === 'joinGroup') {
-					prepareschema = preparechartgroup(phonenumber, reply.message.text);
+					let prepareschema4 = preparechartgroup(phonenumber, reply.message.text);
 					const listdata = [
 						{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 						{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
@@ -1399,42 +1399,23 @@ const receiveEvents = async (req, res) => {
 							}
 						})
 					}
-					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					prepareschema = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
 					await sendMessage(prepareschema4);
 				} else if (reply.type === 'Celebraties') {
 					let image1 = `${process.env.SERVER_URL}public/Celebraties1.jpg`
 					let image2 = `${process.env.SERVER_URL}public/Celebraties2.jpg`
 					let image3 = `${process.env.SERVER_URL}public/Celebraties3.jpg`
 					let image4 = `${process.env.SERVER_URL}public/Celebraties4.jpg`
-					prepareschema = prepareImage(phonenumber, image1);
+					let prepareschema4 = prepareImage(phonenumber, image1);
 					let prepareschema1 = prepareImage(phonenumber, image2);
 					let prepareschema2 = prepareImage(phonenumber, image3);
 					let prepareschema3 = prepareImage(phonenumber, image4);
-					let prepareschema4 = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext);
-					try {
+					prepareschema = prepareList(phonenumber, reply.message.header, reply.message.text, reply.message.footer, reply.message.options, reply.message.buttontext);
 						await sendMessage(prepareschema1); // Send message with image2
-					} catch (error) {
-						console.error('Error sending image1:', error);
-					}
-
-					try {
 						await sendMessage(prepareschema2); // Send message with image3
-					} catch (error) {
-						console.error('Error sending image2:', error);
-					}
-
-					try {
 						await sendMessage(prepareschema3); // Send message with image4
-					} catch (error) {
-						console.error('Error sending image3:', error);
-					}
-
-					// Finally, send the list message
-					try {
 						await sendMessage(prepareschema4); // Send the list message last
-					} catch (error) {
-						console.error('Error sending list message:', error);
-					}
+
 					// reply = await handleText('', parser.nationalNumber, username)
 				}
 				else if (reply.some(item => item.type === 'NewArrivals')) {
@@ -1485,8 +1466,8 @@ const receiveEvents = async (req, res) => {
 							}
 						})
 					}
-					let prepareschema4 = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
-					await sendMessage(prepareschema4);
+					prepareschema = prepareList(phonenumber, message.header, message.text, message.footer, message.options, message.buttontext);
+					// await sendMessage(prepareschema4);
 				}
 
 
