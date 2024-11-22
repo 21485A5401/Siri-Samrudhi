@@ -464,7 +464,7 @@ const handleText = async (message, phonenumber, username) => {
 	const listdata = [
 		{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 		{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
-		{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+		{ _id: '113', title: 'Our Clients', text: 'Our Clients' },
 		{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 		{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 		{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
@@ -665,7 +665,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		const listdata = [
 			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
-			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+			{ _id: '113', title: 'Our Clients', text: 'Our Clients' },
 			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
@@ -714,7 +714,7 @@ const handleInteractive = async (option, phonenumber, username) => {
 		const listdata = [
 			{ _id: '106', title: 'About Us/Contact Us', text: 'About Us/Contact Us' },
 			{ _id: '104', title: 'New Arrivals', text: 'New Arrivals' },
-			{ _id: '113', title: 'Our Celebraties', text: 'Our Celebraties' },
+			{ _id: '113', title: 'Our Clients', text: 'Our Clients' },
 			{ _id: '103', title: 'Our Schemes', text: 'Our Schemes' },
 			{ _id: '101', title: 'Gold Rate', text: 'Gold Rate' },
 			{ _id: '102', title: 'Visit Our Showroom', text: 'VISIT OUR SHOWROOM FOR BEST PRICE' },
